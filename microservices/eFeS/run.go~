@@ -1,0 +1,47 @@
+package main
+
+import (
+	//"eFes/src/logging"
+	"eFes/src/endpoints"
+	"github.com/gin-gonic/gin"
+	"eFes/src"
+	"fmt"
+)
+
+const (
+	SERVE_ADDRESS = "0.0.0.0:6565"
+)
+
+
+func hello(c *gin.Context) {
+	c.JSON(200, gin.H{"message" : "Welcome to eFeS"})
+}
+
+func uploadFile(context *gin.Context){
+	// user := context.Param("user")
+
+	file, _ := context.FormFile("file")
+
+	err := context.SaveUploadedFile(file, "user.png")
+
+	if err != nil{
+		context.String(502, "PANIC")
+	}
+
+	context.String(200, "File Uploaded")
+}
+
+func main() {
+	fmt.Println(src.GetAllFiles())
+	fmt.Println(src.CreateBlock("1"))
+
+	router := gin.Default()	
+
+	router.PUT("/upload/:user", uploadFile)
+	router.GET("/", hello)
+	router.GET("/version", endpoints.GetApiVersion)
+
+	router.Run(SERVE_ADDRESS)
+}
+
+

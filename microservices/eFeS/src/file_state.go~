@@ -1,0 +1,47 @@
+package src
+
+import (
+	"os"
+	"errors"
+	"time"
+)
+
+type file_state struct {
+	state_id string
+
+	expire_time int64
+	file_id string
+	user_id string
+}
+
+func CreateState(file string, user string) *file_state {
+	state := file_state
+
+	state.state_id, err := create_uuid()
+
+	if (err != nil){
+		return nil
+	}
+
+	state.file_id = file
+	state.user_id = user
+
+	return state
+}
+
+
+func create_uuid() (string, err) {
+	uuid, err := os.Command("uuidgen").Output()
+
+	if (err != nil) {
+		return "", err 
+	}
+
+	return uuid, nil 
+}
+
+
+func generate_expire_time() int64 {
+	now := time.Now()
+	now.Add(time.Second * 85)
+}

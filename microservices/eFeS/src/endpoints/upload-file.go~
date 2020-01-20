@@ -1,0 +1,17 @@
+package endpoints
+
+import "github.com/gin-gonic/gin"
+
+func UploadFile(context *gin.Context) {
+	user := context.Param("user")
+
+	file, err := context.FormFile("file")
+
+	err = context.SaveUploadedFile(file, user)
+
+	if err != nil {
+		context.String(502, "PANIC")
+	}
+
+	context.String(200, "File Uploaded")
+}

@@ -1,0 +1,36 @@
+package main
+
+import (
+	"eFes/src"
+	"eFes/src/endpoints"
+	"fmt"
+	"github.com/gin-gonic/gin"
+)
+
+const (
+	SERVE_ADDRESS = "0.0.0.0:6565"
+)
+
+func hello(c *gin.Context) {
+	c.JSON(200, gin.H{"message": "Welcome to eFeS"})
+}
+
+func serveFile(context *gin.Context) {
+	file := context.Param("file")
+	context.FileAttachment(file, file)
+}
+
+func main() {
+	gin.SetMode(gin.ReleaseMode)
+	fmt.Println(src.GetAllFiles())
+	fmt.Println(src.CreateBlock("1"))
+
+	router := gin.Default()
+
+	router.PUT("/upload/:user", endpoints.UploadFile)
+	router.GET("/", hello)
+	router.GET("/version", endpoints.GetApiVersion)
+	router.GET("/file/:user/:file", serveFile)
+
+	router.Run(SERVE_ADDRESS)
+}

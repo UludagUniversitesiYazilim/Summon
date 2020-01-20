@@ -1,0 +1,9 @@
+package endpoints
+
+import "github.com/gin-gonic/gin"
+
+X
+func serveFile(context *gin.Context) {
+	file := context.Param("file")
+	context.FileAttachment(file, file)
+}
